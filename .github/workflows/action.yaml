@@ -1,0 +1,31 @@
+name: Test, build and deploy
+
+on:
+  push:
+    tags:
+      - 'v*'
+    branches:
+      - '*'
+
+jobs:
+
+  tests:
+    runs-on: ubuntu-22.04
+    env:
+      DEBUG: False
+      POSTGRES_USER: postgres
+      POSTGRES_DB: postgres
+      POSTGRES_PASSWORD: postgres
+      SECRET_KEY: 'you-will-never-guess'
+      VK_OAUTH2_KEY: 1234567890
+      VK_OAUTH2_SECRET: 1234567890
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Create env file and build image
+        run: |
+          env > .env
+          docker-compose build
+      - name: Run tests
+        run: |
+          docker-compose run --rm api python3 manage.py test
