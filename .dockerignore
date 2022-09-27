@@ -6,3 +6,4 @@ deploy
 docker-compose.yaml
 Dockerfile
 static
+setup.cfg
