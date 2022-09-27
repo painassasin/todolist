@@ -59,6 +59,7 @@ jobs:
   deploy:
     runs-on: ubuntu-22.04
     needs: build
+    environment: Production
     steps:
       - name: Checkout
         uses: actions/checkout@v2
