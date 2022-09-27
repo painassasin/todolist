@@ -72,11 +72,11 @@ jobs:
         env:
           DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
         run: |
-          envsubst '$DOCKER_HUB_USERNAME' < deploy/docker-compose.yaml > deploy/docker-compose.yml
-          mv deploy/docker-compose.yml deploy/docker-compose.yaml
+          envsubst '$DOCKER_HUB_USERNAME' < deploy/docker-compose.yaml > deploy/tmp.docker-compose.yaml
+          mv deploy/tmp.docker-compose.yaml deploy/docker-compose.yaml
       - name: Collect Static
         run: |
-          docker run \
+          sudo docker run \
             --user 0 \
             --rm \
             --env-file $(pwd)/deploy/.env \

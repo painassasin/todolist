@@ -49,6 +49,7 @@ services:
       - frontend_nw
     volumes:
       - ./nginx.conf:/etc/nginx/conf.d/default.conf
+      - ./static/:/opt/static/
 
 volumes:
   pg_data:
