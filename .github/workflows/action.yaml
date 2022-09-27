@@ -73,7 +73,17 @@ jobs:
           DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
         run: |
           envsubst '$DOCKER_HUB_USERNAME' < deploy/docker-compose.yaml > deploy/docker-compose.yml
-          rm deploy/docker-compose.yaml
+          mv deploy/docker-compose.yml deploy/docker-compose.yaml
+      - name: Collect Static
+        run: |
+          docker run \
+            --user 0 \
+            --rm \
+            --env-file $(pwd)/deploy/.env \
+            --entrypoint  '' \
+            -v $(pwd)/deploy/static/:/opt/static/:rw \
+            ${{ secrets.DOCKER_HUB_USERNAME }}/todolist:latest \
+            python manage.py collectstatic -c --no-input
       - name: Copy on server
         uses: appleboy/scp-action@master
         with:
