@@ -130,7 +130,11 @@ class SignUpTestCase(APITestCase):
 class LoginTestCase(APITestCase):
 
     def setUp(self) -> None:
-        User.objects.create_user(username='test_user', password='test_password')
+        self.user = User.objects.create_user(
+            username='test_user',
+            password='test_password',
+            email='test@test.com',
+        )
 
     def test_invalid_username(self):
         response = self.client.post(
@@ -161,7 +165,13 @@ class LoginTestCase(APITestCase):
             }
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertDictEqual(response.json(), {'username': 'test_user'})
+        self.assertDictEqual(response.json(), {
+            'id': self.user.id,
+            'username': 'test_user',
+            'email': self.user.email,
+            'first_name': self.user.first_name,
+            'last_name': self.user.last_name,
+        })
         self.assertNotEqual(response.cookies['sessionid'].value, '')
 
 
