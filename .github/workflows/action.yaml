@@ -33,7 +33,7 @@ jobs:
   test_2:
     runs-on: ubuntu-22.04
     steps:
-      - run: echo $GITHUB_REF
+      - run: env
 
   build:
     if: startsWith(github.event.ref, 'refs/tags/v')
