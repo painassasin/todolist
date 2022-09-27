@@ -31,11 +31,6 @@ jobs:
         run: |
           docker-compose run --rm api python3 manage.py test
 
-  test_2:
-    runs-on: ubuntu-22.04
-    steps:
-      - run: env
-
   build:
     if: startsWith(github.event.ref, 'refs/tags/v')
     runs-on: ubuntu-22.04
