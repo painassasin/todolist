@@ -59,7 +59,9 @@ jobs:
   deploy:
     runs-on: ubuntu-22.04
     needs: build
-    environment: Production
+    environment:
+      name: Production
+      url: http://painassasin.ru
     steps:
       - name: Checkout
         uses: actions/checkout@v2
