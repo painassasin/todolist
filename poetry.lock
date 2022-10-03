@@ -189,7 +189,7 @@ signedtoken = ["cryptography (>=3.0.0)", "pyjwt (>=2.0.0,<3)"]
 name = "parameterized"
 version = "0.8.1"
 description = "Parameterized testing with any Python test framework"
-category = "main"
+category = "dev"
 optional = false
 python-versions = "*"
 
@@ -410,7 +410,7 @@ testing = ["coverage (>=6.2)", "coverage-enable-subprocess (>=1)", "flaky (>=3.7
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10"
-content-hash = "1e217054573d9c7bcdadfafc754918546a9247e89912dd0b39f66491112311b3"
+content-hash = "d463e958bba4e30e065e79dd01a7d640d9894786f66beaed0531ebd565aded4b"
 
 [metadata.files]
 asgiref = [
