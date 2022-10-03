@@ -60,5 +60,8 @@ class UpdatePasswordSerializer(serializers.Serializer):
 
     def update(self, instance, validated_data):
         instance.password = make_password(validated_data['new_password'])
-        instance.save()
+        instance.save(update_fields=('password',))
         return instance
+
+    def create(self, validated_data):
+        raise NotImplementedError
