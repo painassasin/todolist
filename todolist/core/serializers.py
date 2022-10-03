@@ -64,4 +64,4 @@ class UpdatePasswordSerializer(serializers.Serializer):
         return instance
 
     def create(self, validated_data):
-        raise NotImplementedError
+        raise NotImplementedError  # pragma: no cover

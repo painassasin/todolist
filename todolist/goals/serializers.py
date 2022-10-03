@@ -54,7 +54,7 @@ class GoalSerializer(serializers.ModelSerializer):
         fields = '__all__'
         read_only_fields = ('id', 'created', 'updated', 'user')
 
-    def validate_category(self, value: Type[GoalCategory]):
+    def validate_category(self, value: GoalCategory):
         if self.context['request'].user != value.user:
             raise exceptions.PermissionDenied
         return value
