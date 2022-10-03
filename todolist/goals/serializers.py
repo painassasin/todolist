@@ -22,6 +22,9 @@ class GoalCategorySerializer(serializers.ModelSerializer):
         model = GoalCategory
         fields = '__all__'
         read_only_fields = ('id', 'created', 'updated', 'user')
+        extra_kwargs = {
+            'is_deleted': {'write_only': True}
+        }
 
 
 class GoalCreateSerializer(serializers.ModelSerializer):

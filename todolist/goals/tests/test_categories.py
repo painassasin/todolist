@@ -1,10 +1,12 @@
 from django.contrib.auth.hashers import make_password
 from django.urls import reverse
+from django.utils import timezone
+from parameterized import parameterized
 from rest_framework import status
 from rest_framework.test import APITestCase
 
 from todolist.core.models import User
-from todolist.goals.models import GoalCategory
+from todolist.goals.models import Goal, GoalCategory
 
 
 class TestCategoryCreateView(APITestCase):
@@ -54,4 +56,116 @@ class TestCategoryListView(APITestCase):
             'email': self.user_1.email,
         })
         self.assertEqual(response.json()[0]['title'], self.user_1_cat.title)
-        self.assertFalse(response.json()[0]['is_deleted'])
+
+
+class TestCategoryRetrieveView(APITestCase):
+    def test_auth_required(self):
+        response = self.client.get(reverse('retrieve-update-destroy-category', kwargs={'pk': 1}))
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    @parameterized.expand([
+        ('not exists', False),
+        ('is deleted', True)
+    ])
+    def test_category_not_found(self, _, is_deleted):
+        user = User.objects.create(username='test_user', password=make_password('test_password'))
+        category = GoalCategory.objects.create(title='new_cat', user=user, is_deleted=is_deleted)
+
+        self.client.force_login(user=user)
+        response = self.client.get(reverse('retrieve-update-destroy-category', kwargs={'pk': category.pk + 1}))
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    @parameterized.expand([
+        ('owner', False),
+        ('not_owner', True)
+    ])
+    def test_success(self, _, is_owner):
+        owner = User.objects.create(username='owner', password=make_password('test_password'))
+        not_owner = User.objects.create(username='not_owner', password=make_password('test_password'))
+        category = GoalCategory.objects.create(title='new_cat', user=owner, is_deleted=False)
+
+        self.client.force_login(user=owner if is_owner else not_owner)
+        response = self.client.get(reverse('retrieve-update-destroy-category', kwargs={'pk': category.pk}))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertDictEqual(
+            response.json(),
+            {
+                'id': category.id,
+                'user': {
+                    'id': owner.id,
+                    'username': owner.username,
+                    'first_name': owner.first_name,
+                    'last_name': owner.last_name,
+                    'email': owner.email
+                },
+                'created': timezone.localtime(category.created).isoformat(),
+                'updated': timezone.localtime(category.updated).isoformat(),
+                'title': category.title
+            }
+        )
+
+
+class TestUpdateCategory(APITestCase):
+
+    def test_not_owner(self):
+        category = GoalCategory.objects.create(
+            title='new_cat',
+            user=User.objects.create(username='test_user_1', password=make_password('test_password')),
+            is_deleted=False
+        )
+
+        user = User.objects.create(username='test_user_2', password=make_password('test_password'))
+
+        self.client.force_login(user=user)
+        response = self.client.patch(reverse('retrieve-update-destroy-category', kwargs={'pk': category.pk}))
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_success(self):
+        user = User.objects.create(username='test_user', password=make_password('test_password'))
+        category = GoalCategory.objects.create(title='new_cat', user=user, is_deleted=False)
+
+        self.client.force_login(user=user)
+        response = self.client.patch(
+            path=reverse('retrieve-update-destroy-category', kwargs={'pk': category.pk}),
+            data={'title': 'new_category'}
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        category.refresh_from_db(fields=('title',))
+        self.assertEqual(category.title, 'new_category')
+
+
+class TestDeleteCategory(APITestCase):
+    def test_not_owner(self):
+        category = GoalCategory.objects.create(
+            title='new_cat',
+            user=User.objects.create(username='test_user_1', password=make_password('test_password')),
+            is_deleted=False
+        )
+
+        user = User.objects.create(username='test_user_2', password=make_password('test_password'))
+
+        self.client.force_login(user=user)
+        response = self.client.delete(reverse('retrieve-update-destroy-category', kwargs={'pk': category.pk}))
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_success_without_goals(self):
+        user = User.objects.create(username='test_user', password=make_password('test_password'))
+        category = GoalCategory.objects.create(title='new_cat', user=user, is_deleted=False)
+
+        self.client.force_login(user=user)
+        response = self.client.delete(reverse('retrieve-update-destroy-category', kwargs={'pk': category.pk}))
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        category.refresh_from_db(fields=('is_deleted',))
+        self.assertTrue(category.is_deleted)
+
+    def test_success_with_goals(self):
+        user = User.objects.create(username='test_user', password=make_password('test_password'))
+        category = GoalCategory.objects.create(title='new_cat', user=user, is_deleted=False)
+        goal = Goal.objects.create(title='goal', category=category, due_date=timezone.now(), user=user)
+
+        self.client.force_login(user=user)
+        response = self.client.delete(reverse('retrieve-update-destroy-category', kwargs={'pk': category.pk}))
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        category.refresh_from_db(fields=('is_deleted',))
+        goal.refresh_from_db(fields=('status', ))
+        self.assertEqual(goal.status, Goal.Status.archived)
