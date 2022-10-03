@@ -27,9 +27,8 @@ services:
     depends_on:
       db:
         condition: service_healthy
-    command: python3 manage.py runserver 0.0.0.0:8000
     healthcheck:
-      test: curl -sS http://127.0.0.1:8000/ping/ || exit 1
+      test: python3 -c 'import http.client;http.client.HTTPConnection("127.0.0.1:8000", timeout=1).request("GET", "/ping/")'
       interval: 3s
       timeout: 3s
       retries: 3
