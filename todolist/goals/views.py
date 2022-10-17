@@ -27,7 +27,10 @@ class GoalCategoryListView(generics.ListAPIView):
     search_fields = ['title']
 
     def get_queryset(self):
-        return GoalCategory.objects.filter(user_id=self.request.user.id, is_deleted=False)
+        return GoalCategory.objects.select_related('user').filter(
+            user_id=self.request.user.id,
+            is_deleted=False
+        )
 
 
 class GoalCategoryView(generics.RetrieveUpdateDestroyAPIView):
@@ -73,7 +76,7 @@ class GoalView(generics.RetrieveUpdateAPIView):
     serializer_class = GoalSerializer
 
     def get_queryset(self):
-        return Goal.objects.filter(~Q(status=Goal.Status.archived))
+        return Goal.objects.filter(~Q(status=Goal.Status.archived) & Q(category__is_deleted=False))
 
 
 class GoalCommentCreateView(generics.CreateAPIView):
