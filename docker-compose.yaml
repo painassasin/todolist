@@ -43,8 +43,8 @@ services:
     networks:
       - backend_nw
       - frontend_nw
-#    volumes:
-#      - ./todolist/:/opt/todolist
+    volumes:
+      - ./todolist/:/opt/todolist
 
   frontend:
     image: sermalenk/skypro-front:lesson-36

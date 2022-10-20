@@ -32,7 +32,8 @@ class LoginSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['username', 'password']
+        fields = ['id', 'username', 'password', 'first_name', 'last_name', 'email']
+        read_only_fields = ['id', 'first_name', 'last_name', 'email']
 
     def create(self, validated_data):
         if not (user := authenticate(
