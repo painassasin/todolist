@@ -146,6 +146,20 @@ docs = ["furo (>=2022.6.21)", "sphinx (>=5.1.1)", "sphinx-autodoc-typehints (>=1
 testing = ["covdefaults (>=2.2)", "coverage (>=6.4.2)", "pytest (>=7.1.2)", "pytest-cov (>=3)", "pytest-timeout (>=2.1)"]
 
 [[package]]
+name = "gunicorn"
+version = "20.1.0"
+description = "WSGI HTTP Server for UNIX"
+category = "main"
+optional = false
+python-versions = ">=3.5"
+
+[package.extras]
+eventlet = ["eventlet (>=0.24.1)"]
+gevent = ["gevent (>=1.4.0)"]
+setproctitle = ["setproctitle"]
+tornado = ["tornado (>=0.2)"]
+
+[[package]]
 name = "identify"
 version = "2.5.6"
 description = "File identification library for Python"
@@ -410,7 +424,7 @@ testing = ["coverage (>=6.2)", "coverage-enable-subprocess (>=1)", "flaky (>=3.7
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10"
-content-hash = "d463e958bba4e30e065e79dd01a7d640d9894786f66beaed0531ebd565aded4b"
+content-hash = "ffecfc7b00ef98c3232486cfefa8cd3e6e00bf2c486c488f04c545ab6153034c"
 
 [metadata.files]
 asgiref = []
@@ -426,6 +440,7 @@ django-filter = []
 djangorestframework = []
 envparse = []
 filelock = []
+gunicorn = []
 identify = []
 idna = []
 nodeenv = []
