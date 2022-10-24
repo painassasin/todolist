@@ -15,12 +15,12 @@ class CreateUserSerializer(serializers.ModelSerializer):
         model = User
         fields = ['id', 'username', 'first_name', 'last_name', 'email', 'password', 'password_repeat']
 
-    def validate(self, attrs):
+    def validate(self, attrs: dict) -> dict:
         if attrs['password'] != attrs['password_repeat']:
-            raise ValidationError('Passwords must match')
+            raise ValidationError({'password_repeat': 'Passwords must match'})
         return attrs
 
-    def create(self, validated_data):
+    def create(self, validated_data: dict) -> User:
         del validated_data['password_repeat']
         validated_data['password'] = make_password(validated_data['password'])
         return super().create(validated_data)
@@ -35,7 +35,7 @@ class LoginSerializer(serializers.ModelSerializer):
         fields = ['id', 'username', 'password', 'first_name', 'last_name', 'email']
         read_only_fields = ['id', 'first_name', 'last_name', 'email']
 
-    def create(self, validated_data):
+    def create(self, validated_data: dict) -> User:
         if not (user := authenticate(
             username=validated_data['username'],
             password=validated_data['password'],
@@ -54,12 +54,12 @@ class UpdatePasswordSerializer(serializers.Serializer):
     old_password = PasswordField(required=True)
     new_password = PasswordField(required=True)
 
-    def validate(self, attrs):
+    def validate(self, attrs: dict) -> dict:
         if not self.instance.check_password(attrs['old_password']):
             raise ValidationError({'old_password': 'field is incorrect'})
         return attrs
 
-    def update(self, instance, validated_data):
+    def update(self, instance: User, validated_data: dict) -> User:
         instance.password = make_password(validated_data['new_password'])
         instance.save(update_fields=('password',))
         return instance
