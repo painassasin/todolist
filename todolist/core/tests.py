@@ -76,7 +76,7 @@ class SignUpTestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertDictEqual(
             response.json(),
-            {'non_field_errors': ['Passwords must match']}
+            {'password_repeat': ['Passwords must match']}
         )
 
     def test_minimal_required_fields_success(self):
