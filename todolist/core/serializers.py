@@ -13,7 +13,7 @@ class CreateUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['id', 'username', 'first_name', 'last_name', 'email', 'password', 'password_repeat']
+        fields = ('id', 'username', 'first_name', 'last_name', 'email', 'password', 'password_repeat')
 
     def validate(self, attrs: dict) -> dict:
         if attrs['password'] != attrs['password_repeat']:
@@ -32,8 +32,8 @@ class LoginSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['id', 'username', 'password', 'first_name', 'last_name', 'email']
-        read_only_fields = ['id', 'first_name', 'last_name', 'email']
+        fields = ('id', 'username', 'password', 'first_name', 'last_name', 'email')
+        read_only_fields = ('id', 'first_name', 'last_name', 'email')
 
     def create(self, validated_data: dict) -> User:
         if not (user := authenticate(
@@ -47,7 +47,7 @@ class LoginSerializer(serializers.ModelSerializer):
 class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['id', 'username', 'first_name', 'last_name', 'email']
+        fields = ('id', 'username', 'first_name', 'last_name', 'email')
 
 
 class UpdatePasswordSerializer(serializers.Serializer):
@@ -65,4 +65,4 @@ class UpdatePasswordSerializer(serializers.Serializer):
         return instance
 
     def create(self, validated_data):
-        raise NotImplementedError  # pragma: no cover
+        raise NotImplementedError

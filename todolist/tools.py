@@ -1,7 +1,10 @@
 import functools
+import logging
 import time
 
 from django.db import connection, reset_queries
+
+logger = logging.getLogger(__name__)
 
 
 def query_debugger(func):
@@ -17,9 +20,9 @@ def query_debugger(func):
 
         end_queries = len(connection.queries)
 
-        print(f'Function : {func.__name__}')
-        print(f'Number of Queries : {end_queries - start_queries}')
-        print(f'Finished in : {(end - start):.2f}s')
+        logger.debug('Function : %s', func.__name__)
+        logger.debug('Number of Queries : %d', end_queries - start_queries)
+        logger.debug('Finished in %.2f', end - start)
         return result
 
     return inner_func
