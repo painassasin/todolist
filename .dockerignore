@@ -7,6 +7,3 @@
 !manage.py
 !poetry.lock
 !pyproject.toml
-
-**/tests
-**/tests*.py

@@ -22,9 +22,15 @@ repos:
           flake8-print,
           flake8-simplify,
         ]
-        exclude: "[a-zA-Z]*/(migrations)/(.)*"
+        exclude: "todolist/[a-zA-Z]*/(migrations)/(.)*"
   - repo: https://github.com/pycqa/bandit
     rev: 1.7.4
     hooks:
       - id: bandit
         args: [ '-iii', '-ll' ]
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v0.991
+    hooks:
+      - id: mypy
+        exclude: "todolist/[a-zA-Z]*/(migrations)/(.)*"
+        language: system

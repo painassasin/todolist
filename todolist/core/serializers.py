@@ -41,7 +41,7 @@ class LoginSerializer(serializers.ModelSerializer):
             password=validated_data['password'],
         )):
             raise AuthenticationFailed
-        return user
+        return user  # type: ignore[return-value]
 
 
 class ProfileSerializer(serializers.ModelSerializer):
@@ -55,7 +55,7 @@ class UpdatePasswordSerializer(serializers.Serializer):
     new_password = PasswordField(required=True)
 
     def validate(self, attrs: dict) -> dict:
-        if not self.instance.check_password(attrs['old_password']):
+        if not self.instance.check_password(attrs['old_password']):  # type: ignore[union-attr]
             raise ValidationError({'old_password': 'field is incorrect'})
         return attrs
 
