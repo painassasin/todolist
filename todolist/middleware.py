@@ -5,7 +5,7 @@ from django.core.handlers.wsgi import WSGIRequest
 from django.db import connection, reset_queries
 
 
-class QueryDebuggerMiddleware:
+class QueryDebuggerMiddleware:  # pragma: no cover
     def __init__(self, get_response):
         self.get_response = get_response
         self.logger = logging.getLogger(__name__)

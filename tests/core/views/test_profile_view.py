@@ -24,3 +24,14 @@ def test_success(client, user, faker):
         'last_name': user.last_name,
         'email': user.email,
     }
+
+
+@pytest.mark.django_db
+def test_logout(client, django_user_model, user, faker):
+    assert django_user_model.objects.count() == 1
+    client.force_login(user)
+    assert client.cookies['sessionid'].value
+    response = client.delete(reverse('profile'))
+    assert response.status_code == status.HTTP_204_NO_CONTENT
+    assert not response.cookies['sessionid'].value
+    assert django_user_model.objects.count() == 1
