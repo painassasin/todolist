@@ -20,7 +20,7 @@ services:
       - backend_nw
 
   api:
-    image: ${DOCKER_HUB_USERNAME}/todolist:latest
+    image: ${DOCKER_HUB_USERNAME}/todolist:${TAG_NAME}
     restart: always
     env_file:
       - ./.env
