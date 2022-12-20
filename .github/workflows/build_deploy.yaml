@@ -39,7 +39,9 @@ jobs:
           architecture: 'x64'
           cache: 'poetry'
       - name: Install dependencies
-        run: poetry install --no-root
+        run: |
+          poetry install --no-root
+          poetry add pytest-cov --dev
       - name: Run tests
         env:
           SECRET_KEY: 'you-will-never-guess'
@@ -48,7 +50,16 @@ jobs:
           POSTGRES_PASSWORD: postgres
           POSTGRES_DB: postgres
         run: |
-          poetry run pytest . -v
+          poetry run pytest \
+            --junitxml=pytest.xml \
+            --cov-report=term-missing:skip-covered \
+            --cov=todolist \
+          tests/ | tee pytest-coverage.txt
+      - name: Pytest coverage comment
+        uses: MishaKav/pytest-coverage-comment@main
+        with:
+          pytest-coverage-path: ./pytest-coverage.txt
+          junitxml-path: ./pytest.xml
 
   build:
     if: startsWith(github.event.ref, 'refs/tags/v')
