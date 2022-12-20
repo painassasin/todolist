@@ -5,6 +5,8 @@ from django.contrib.auth.password_validation import CommonPasswordValidator, Min
 from django.urls import reverse
 from rest_framework import status
 
+from todolist.core.models import User
+
 
 @pytest.mark.django_db
 def test_passwords_missmatch(client, faker):
@@ -21,7 +23,7 @@ def test_passwords_missmatch(client, faker):
 @pytest.mark.parametrize('password_params', [
     {'length': random.randrange(4, MinimumLengthValidator().min_length)},
     None,
-], ids=('min_length_validation', 'common_password_validation'))
+], ids=('min length validation', 'common password validation'))
 def test_invalid_password(client, faker, password_params):
     if password_params:
         invalid_password = faker.password(**password_params)
@@ -37,8 +39,8 @@ def test_invalid_password(client, faker, password_params):
 
 
 @pytest.mark.django_db
-def test_success_short(client, django_user_model, faker):
-    assert not django_user_model.objects.count()
+def test_success_short(client, faker):
+    assert not User.objects.count()
     password = faker.password()
     response = client.post(reverse('signup'), data={
         'username': faker.user_name(),
@@ -46,8 +48,8 @@ def test_success_short(client, django_user_model, faker):
         'password_repeat': password,
     })
     assert response.status_code == status.HTTP_201_CREATED
-    assert django_user_model.objects.count() == 1
-    user = django_user_model.objects.last()
+    assert User.objects.count() == 1
+    user = User.objects.last()
     assert response.json() == {
         'id': user.id,
         'username': user.username,
@@ -60,8 +62,8 @@ def test_success_short(client, django_user_model, faker):
 
 
 @pytest.mark.django_db
-def test_success_full(client, django_user_model, faker):
-    assert not django_user_model.objects.count()
+def test_success_full(client, faker):
+    assert not User.objects.count()
     password = faker.password()
     response = client.post(reverse('signup'), data={
         'username': faker.user_name(),
@@ -72,8 +74,8 @@ def test_success_full(client, django_user_model, faker):
         'password_repeat': password,
     })
     assert response.status_code == status.HTTP_201_CREATED
-    assert django_user_model.objects.count() == 1
-    user = django_user_model.objects.last()
+    assert User.objects.count() == 1
+    user = User.objects.last()
     assert response.json() == {
         'id': user.id,
         'username': user.username,
