@@ -1,6 +1,12 @@
 import pytest
+from rest_framework.test import APIClient
 
 from todolist.core.models import User
+
+
+@pytest.fixture()
+def client() -> APIClient:
+    return APIClient()
 
 
 @pytest.fixture()
