@@ -40,7 +40,7 @@ jobs:
         env:
           RELEASE_VERSION: ${{ steps.vars.outputs.tag }}
         run: |
-          echo $RELEASE_VERSION
+          echo ${{ RELEASE_VERSION }}
           echo ${{ steps.vars.outputs.tag }}
           echo ${{ steps.meta.outputs.tags }}
           echo ${{ steps.meta.outputs.labels }}
