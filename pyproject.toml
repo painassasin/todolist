@@ -18,6 +18,9 @@ gunicorn = "^20.1.0"
 pre-commit = "^2.20.0"
 djangorestframework-stubs = "^1.8.0"
 django-stubs = { version = "^1.13.1", extras = ["compatible-mypy"] }
+pytest-django = "^4.5.2"
+pytest-faker = "^2.0.0"
+ipython = "^8.7.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
@@ -38,3 +41,7 @@ warn_redundant_casts = true
 
 [tool.django-stubs]
 django_settings_module = "todolist.settings"
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "todolist.settings"
+python_files = ["tests.py", "test_*.py", "*_tests.py"]
