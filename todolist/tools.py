@@ -1,24 +1,25 @@
 import functools
 import logging
 import time
+from typing import Any, Callable
 
 from django.db import connection, reset_queries
 
 logger = logging.getLogger(__name__)
 
 
-def query_debugger(func):
+def query_debugger(func: Callable):  # pragma: no cover
     @functools.wraps(func)
     def inner_func(*args, **kwargs):
         reset_queries()
 
-        start_queries = len(connection.queries)
+        start_queries: int = len(connection.queries)
 
-        start = time.perf_counter()
-        result = func(*args, **kwargs)
-        end = time.perf_counter()
+        start: float = time.perf_counter()
+        result: Any = func(*args, **kwargs)
+        end: float = time.perf_counter()
 
-        end_queries = len(connection.queries)
+        end_queries: int = len(connection.queries)
 
         logger.debug('Function : %s', func.__name__)
         logger.debug('Number of Queries : %d', end_queries - start_queries)

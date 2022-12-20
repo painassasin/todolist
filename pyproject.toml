@@ -45,3 +45,20 @@ django_settings_module = "todolist.settings"
 [tool.pytest.ini_options]
 DJANGO_SETTINGS_MODULE = "todolist.settings"
 python_files = ["tests.py", "test_*.py", "*_tests.py"]
+
+[tool.coverage.report]
+omit = [
+    "todolist/asgi.py",
+    "todolist/wsgi.py",
+    "todolist/settings.py",
+]
+
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "def __str__",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+    "if TYPE_CHECKING:",
+    "if typing.TYPE_CHECKING:"
+]

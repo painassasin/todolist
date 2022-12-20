@@ -9,7 +9,7 @@ from todolist.core.serializers import CreateUserSerializer, LoginSerializer, Pro
 
 @api_view(['GET'])
 def health_check(request):
-    return Response({'status': 'Ok'})
+    return Response({'status': 'OK'})
 
 
 class SignupView(generics.CreateAPIView):
