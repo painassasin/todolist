@@ -36,18 +36,13 @@ jobs:
       - name: Set output
         id: vars
         run: echo "tag=${GITHUB_REF#refs/*/}" >> $GITHUB_OUTPUT
-      - name: Check output
         env:
-          RELEASE_VERSION: ${{ steps.vars.outputs.tag }}
+          TAG_NAME: ${{ steps.vars.outputs.tag }}
+      - name: Check output
         run: |
-          echo '1'
-          echo $RELEASE_VERSION
-          echo '2'
+          echo $TAG_NAME
           echo ${{ steps.vars.outputs.tag }}
-          echo '3'
-          echo ${{ steps.meta.outputs.tags }}
-          echo '4'
-
+#
 #  deploy:
 #    runs-on: ubuntu-22.04
 #    needs: build
@@ -56,16 +51,17 @@ jobs:
 #    steps:
 #      - name: Checkout
 #        uses: actions/checkout@v2
-#      - uses: anthonykgross/ansible-vault-cli-github-action@v1
-#        with:
-#          vault_key: ${{ secrets.VAULT_PASSWORD }}
-#          command: "ansible-vault decrypt deploy/.env"
 #      - name: Update Docker Compose
 #        env:
 #          DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
 #        run: |
 #          envsubst '$DOCKER_HUB_USERNAME' < deploy/docker-compose.yaml > deploy/tmp.docker-compose.yaml
 #          mv deploy/tmp.docker-compose.yaml deploy/docker-compose.yaml
+#      - uses: anthonykgross/ansible-vault-cli-github-action@v1
+#        with:
+#          vault_key: ${{ secrets.VAULT_PASSWORD }}
+#          command: "ansible-vault decrypt deploy/.env"
+
 #      - name: Collect Static
 #        run: |
 #          sudo docker run \
