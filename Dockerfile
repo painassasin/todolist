@@ -3,8 +3,6 @@ MAINTAINER painassasin@icloud.com
 
 WORKDIR /opt/
 
-RUN groupadd --system service && useradd --system -g service api
-
 EXPOSE 8000
 
 RUN pip install "poetry==1.1.13"
@@ -14,8 +12,6 @@ RUN poetry config virtualenvs.create false \
     && poetry install --no-dev --no-interaction --no-ansi --no-root
 
 COPY . .
-
-USER api
 
 ENTRYPOINT ["bash", "entrypoint.sh"]
 
