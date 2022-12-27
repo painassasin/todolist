@@ -51,6 +51,7 @@ omit = [
     "todolist/asgi.py",
     "todolist/wsgi.py",
     "todolist/settings.py",
+    "todolist/[a-zA-Z]*/(migrations)/(.)*",
 ]
 
 exclude_lines = [
